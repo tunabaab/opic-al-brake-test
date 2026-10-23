@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f57c35">
+<title>오픽 AL 못 가는 이유 연구소</title>
+<style>
+  :root{
+    --orange:#f47b35;--orange-dark:#d95622;--cream:#fff8ed;--paper:#fffdf8;
+    --ink:#28221e;--muted:#786e65;--peach:#ffe1c8;--line:#ead9c8;
+    --mint:#d9f0df;--shadow:0 16px 40px rgba(100,48,18,.13);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    background:radial-gradient(circle at 9% 12%,#ffcf9b 0 7%,transparent 7.2%),linear-gradient(145deg,#f58b46,#ec672b 55%,#d94e22);min-height:100vh}
+  button{font:inherit}
+  .wrap{width:min(900px,calc(100% - 32px));margin:0 auto;padding:26px 0 42px}
+  header{display:flex;align-items:center;justify-content:space-between;color:#fff;margin-bottom:18px}
+  .brand{font-weight:900;letter-spacing:-.04em}.badge{border:1px solid #ffffff8c;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:750;background:#ffffff20}
+  .shell{background:var(--paper);border:3px solid var(--ink);border-radius:28px;box-shadow:8px 9px 0 var(--ink),var(--shadow);overflow:hidden}
+  .hero{display:grid;grid-template-columns:1fr 210px;gap:22px;align-items:center;padding:48px 54px 42px;background:linear-gradient(120deg,#fff8ed,#fff1df)}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--mint);border:2px solid var(--ink);border-radius:99px;padding:7px 11px;font-weight:850;font-size:12px;transform:rotate(-2deg)}
+  h1{font-size:clamp(34px,6vw,58px);line-height:1.02;letter-spacing:-.07em;margin:20px 0 14px}
+  h1 .accent{color:var(--orange-dark);display:block}
+  .intro{color:var(--muted);line-height:1.75;margin:0;max-width:540px;font-size:15px}
+  .blob-stage{display:grid;place-items:center;position:relative}
+  .blob{width:174px;height:166px;background:#fff;border:4px solid var(--ink);border-radius:43% 54% 44% 51% / 48% 42% 58% 50%;position:relative;transform:rotate(-5deg);animation:wobble 4s ease-in-out infinite}
+  .blob:before,.blob:after{content:"";position:absolute;background:#fff;border:4px solid var(--ink);width:43px;height:59px;top:-27px;z-index:-1}
+  .blob:before{left:20px;border-radius:70% 20% 0 0;transform:rotate(-17deg)}
+  .blob:after{right:21px;border-radius:20% 70% 0 0;transform:rotate(15deg)}
+  .eye{position:absolute;top:53px;width:12px;height:19px;background:var(--ink);border-radius:50%}
+  .eye.left{left:52px}.eye.right{right:48px}
+  .mouth{position:absolute;left:73px;top:83px;width:28px;height:17px;border:4px solid var(--ink);border-top:0;border-radius:0 0 50% 50%;transform:rotate(12deg)}
+  .sweat{position:absolute;right:25px;top:35px;color:#64b7d1;font-size:24px;transform:rotate(20deg)}
+  .caption{position:absolute;bottom:-18px;right:-7px;background:#fff3a8;border:2px solid var(--ink);border-radius:50%;padding:9px 12px;font-weight:950;font-size:12px;transform:rotate(8deg)}
+  @keyframes wobble{0%,100%{border-radius:43% 54% 44% 51% / 48% 42% 58% 50%;transform:rotate(-5deg) translateY(0)}50%{border-radius:52% 44% 53% 43% / 42% 55% 44% 58%;transform:rotate(3deg) translateY(-5px)}}
+  .panel{padding:36px 54px 44px}
+  .hidden{display:none!important}
+  .progress-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:850;color:var(--muted);margin-bottom:10px}
+  .progress{height:10px;background:#f2e8dc;border-radius:99px;overflow:hidden;border:1px solid #e5d4c2}
+  .progress span{height:100%;display:block;background:var(--orange);border-radius:99px;transition:width .35s ease}
+  .question-top{display:flex;align-items:center;gap:11px;margin:28px 0 10px}
+  .qnum{display:grid;place-items:center;width:39px;height:39px;flex:none;background:#ffdfa9;border:2px solid var(--ink);border-radius:13px;font-weight:950;transform:rotate(-4deg)}
+  h2{font-size:clamp(21px,3.6vw,30px);line-height:1.32;letter-spacing:-.04em;margin:0}
+  .hint{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 19px 50px}
+  .options{display:grid;gap:11px}
+  .option{display:flex;align-items:flex-start;text-align:left;gap:13px;width:100%;border:2px solid var(--line);border-radius:17px;padding:15px 17px;background:#fff;cursor:pointer;transition:.15s transform,.15s border-color,.15s background}
+  .option:hover{transform:translateY(-2px);border-color:var(--orange);background:#fffaf4}
+  .option.selected{border-color:var(--orange-dark);background:#fff0e4;box-shadow:inset 0 0 0 1px var(--orange-dark)}
+  .letter{display:grid;place-items:center;flex:none;width:27px;height:27px;border-radius:9px;background:#f5e8db;color:var(--orange-dark);font-size:12px;font-weight:950}
+  .option.selected .letter{background:var(--orange-dark);color:white}
+  .option-text{font-size:15px;line-height:1.6;font-weight:650}
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+  .btn{border:2px solid var(--ink);border-radius:13px;padding:12px 18px;font-weight:900;cursor:pointer;transition:transform .15s,opacity .15s}
+  .btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+  .btn-quiet{background:transparent;color:var(--ink)}.btn-main{background:var(--orange);color:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .footnote{font-size:12px;color:var(--muted);margin:0}
+  .start-actions{margin-top:25px;display:flex;gap:13px;align-items:center;flex-wrap:wrap}
+  .sticker{font-size:12px;color:var(--muted);font-weight:700}
+  .result-wrap{padding:0 54px 48px}
+  .result-hero{display:grid;grid-template-columns:190px 1fr;gap:20px;align-items:center;margin:0 0 19px}
+  .creature{display:grid;place-items:center;background:var(--ink);border:3px solid var(--ink);border-radius:22px;min-height:190px;overflow:hidden;box-shadow:4px 4px 0 #ffffff9c}
+  .creature svg{display:block;width:100%;max-width:190px;height:auto}
+  .result-head{background:#fff0df;border:2px solid var(--ink);border-radius:22px;padding:26px 29px;position:relative;overflow:hidden}
+  .result-head:after{content:"";position:absolute;width:160px;height:160px;background:#ffd09c;border-radius:50%;right:-40px;top:-66px;opacity:.45}
+  .result-kicker{font-size:12px;font-weight:950;color:var(--orange-dark);letter-spacing:.05em}
+  .result-head h2{font-size:clamp(27px,5vw,42px);margin:9px 0 8px;position:relative;z-index:1}
+  .result-head p{line-height:1.65;color:#584b41;margin:0;max-width:620px;position:relative;z-index:1}
+  .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .result-card{border:2px solid var(--line);border-radius:18px;padding:19px;background:white}
+  .result-card h3{font-size:15px;margin:0 0 10px;letter-spacing:-.02em}
+  .result-card p,.result-card li{font-size:14px;line-height:1.7;color:#594f47}
+  .result-card p{margin:0}.result-card ul{padding-left:19px;margin:0}
+  .video-card{grid-column:1/-1;background:#fff1e8;border-color:#f0b894}
+  .video-link{display:inline-flex;align-items:center;gap:9px;margin-top:13px;padding:10px 14px;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-weight:850;text-decoration:none;transition:transform .15s,background .15s}
+  .video-link:hover{transform:translateY(-2px);background:#fff8ef}
+  .video-note{font-size:12px!important;color:var(--muted)!important;margin-top:10px!important}
+  .criteria{grid-column:1/-1;background:#f7f1e9}
+  .result-actions{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+  .smallprint{font-size:12px;color:var(--muted);line-height:1.5}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media(max-width:650px){
+    .wrap{width:min(100% - 20px,520px);padding-top:14px}
+    header{margin:0 4px 12px}.shell{border-radius:22px;box-shadow:5px 6px 0 var(--ink)}
+    .hero{grid-template-columns:1fr;padding:31px 24px 30px;gap:12px}.blob-stage{grid-row:1;justify-self:end;margin:2px 18px 0 0;transform:scale(.76);transform-origin:top right;height:112px;width:150px}
+    .hero-copy{grid-row:2}h1{margin:16px 0 12px}.intro{font-size:14px}
+    .panel{padding:25px 22px 30px}.hint{margin-left:0}.result-wrap{padding:0 22px 30px}.result-head{padding:22px}
+    .result-hero{grid-template-columns:118px 1fr;gap:11px}.creature{min-height:130px;border-radius:17px}.result-head{padding:18px}.result-grid{grid-template-columns:1fr}.video-card,.criteria{grid-column:auto}.result-actions{align-items:flex-start}
+  }
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand">🍊 말랑오픽 연구소</div><div class="badge">IH → AL 마음 진단 키트</div></header>
+  <main class="shell">
+    <section class="hero" id="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">🧪 결과는 진단이 아니라 학습 힌트!</span>
+        <h1>왜 나는 아직<br><span class="accent">AL 앞에서 멈출까?</span></h1>
+        <p class="intro">영어를 못해서가 아니라, 내 답변을 붙잡는 ‘진짜 브레이크’가 있을지도 몰라요. 6문항에 솔직하게 답하고 다음 연습 방향을 찾아보세요.</p>
+        <div class="start-actions"><button class="btn btn-main" id="startBtn">내 브레이크 찾기 →</button><span class="sticker">⏱ 약 1분 · 답은 저장되지 않아요</span></div>
+      </div>
+      <div class="blob-stage" aria-hidden="true"><div class="blob"><i class="eye left"></i><i class="eye right"></i><i class="mouth"></i><b class="sweat">💧</b></div><span class="caption">나 왜 이러지</span></div>
+    </section>
+    <section class="panel hidden" id="quiz" aria-live="polite">
+      <div class="progress-row"><span id="progressLabel">질문 1 / 6</span><span id="progressPercent">17%</span></div>
+      <div class="progress" role="progressbar" aria-label="진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="17"><span id="progressFill" style="width:17%"></span></div>
+      <div class="question-top"><span class="qnum" id="qNum">Q1</span><h2 id="question"></h2></div>
+      <p class="hint" id="hint"></p>
+      <div class="options" id="options"></div>
+      <div class="controls"><button class="btn btn-quiet" id="backBtn">← 이전</button><p class="footnote">정답은 없어요. 요즘의 나와 가장 가까운 답을 골라주세요.</p><button class="btn btn-main" id="nextBtn" disabled>다음 →</button></div>
+    </section>
+    <section class="result-wrap hidden" id="result" aria-live="polite"></section>
+  </main>
+</div>
+<script>
+/* 각 선택지는 OPIc 말하기 과업에서 드러나는 한 가지 학습 장애에 1점을 줍니다.
+   OPIc 공식 소개의 Function / Accuracy·Content·Context / Text Type와
+   ACTFL Advanced의 연결된 문단, 구체적 서술, 돌발 상황 대응을 질문 설계에 반영했습니다.
+   최다 득점 유형을 추천하고 동점이면 Q6, 그다음 Q1 응답을 우선합니다. */
+const types={
+  script:{name:"대본 없으면 말문 잠금형",emoji:"📜",tag:"자유 답변보다 안전한 대본이 먼저 떠올라요",
+    why:"외운 표현은 든든하지만, 질문이 조금만 달라져도 ‘준비한 문장 찾기’가 시작될 수 있어요. 핵심 브레이크는 영어 실력 자체보다 답변을 통째로 외우는 방식일 가능성이 큽니다.",
+    explain:"문장 암기량을 늘리기보다, 경험의 핵심 장면과 표현 조각을 여러 질문에 옮겨 쓰는 연습이 필요해요.",
+    actions:["완성 답변 대신 키워드 3개만 적고 말하기","한 경험을 장소·사람·문제 질문으로 바꿔 답하기","같은 내용을 30초와 60초 버전으로 말하기"],
+    criteria:"준비한 답을 외우는지보다 익숙하지 않은 후속 질문에도 경험을 연결해 설명하고 문단을 이어가는지 점검해요.",
+    videoTitle:"오픽 AL 10일 공부법 — 암기보다 실제 말하기·모의고사 연습",videoUrl:"https://www.youtube.com/watch?v=ZZRFuoqSjBw",videoNote:"여울 YEOUL의 학습 경험 영상입니다. 제시된 공부법은 참고 자료이며 등급을 보장하지 않습니다.",
+    art:'<svg viewBox="0 0 190 190" aria-hidden="true"><path d="M42 51 36 22q-2-12 7-8l23 25M122 40l16-25q8-8 11 4l4 31" fill="#fff" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M35 91C32 62 51 43 82 43c13-14 44-11 58 7 21 26 15 68-4 91-15 19-53 20-78 9-25-11-28-35-23-59Z" fill="#fff"/><ellipse cx="77" cy="83" rx="5" ry="9" fill="#171412"/><ellipse cx="119" cy="80" rx="5" ry="9" fill="#171412"/><path d="M91 105q9 13 18 0" fill="none" stroke="#171412" stroke-width="4" stroke-linecap="round"/><rect x="15" y="116" width="42" height="52" rx="4" fill="#ffc77e" stroke="#171412" stroke-width="3" transform="rotate(-9 15 116)"/><path d="m26 129 21-3m-20 12 18-3m-16 12 15-2" stroke="#171412" stroke-width="3" stroke-linecap="round"/></svg>'},
+  develop:{name:"한 문장 출발·세 문장 실종형",emoji:"🫧",tag:"대답은 시작했는데 금방 착륙해요",
+    why:"질문에 맞는 첫 문장은 나오지만, 이유·장면·느낌이 이어지지 않아 답이 짧게 끝날 수 있어요. 핵심 브레이크는 아이디어 고갈보다 답변을 확장하는 연결 고리가 부족한 것일 수 있습니다.",
+    explain:"어려운 표현보다 ‘주장 → 구체 장면 → 이유나 느낌’의 작은 구조를 자동화해보세요.",
+    actions:["질문마다 ‘한 줄 답 + 실제 장면 2개 + 느낌’ 붙이기","and만 반복하지 말고 because, so, after that으로 연결하기","답을 녹음한 뒤 장면이 보이는 명사·동사를 하나 추가하기"],
+    criteria:"짧은 문장에 머물지 않고 시간 순서와 구체적 세부사항을 연결해 한 덩어리의 이야기로 만드는 연습이 핵심이에요.",
+    videoTitle:"오픽 IH/AL 실제 답변 — 등급별 답변 차이 살펴보기",videoUrl:"https://www.youtube.com/watch?v=kfI2wOKhfvI",videoNote:"실제 답변 예시를 들으며 답변의 전개와 구체성을 관찰해보세요. 특정 답변 길이가 등급을 보장하지는 않습니다.",
+    art:'<svg viewBox="0 0 190 190" aria-hidden="true"><path d="M43 50 39 23q-1-12 8-8l21 26M122 40l17-25q8-8 11 4l3 31" fill="#fff" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M35 91C32 62 51 43 82 43c13-14 44-11 58 7 21 26 15 68-4 91-15 19-53 20-78 9-25-11-28-35-23-59Z" fill="#fff"/><ellipse cx="77" cy="81" rx="5" ry="9" fill="#171412"/><ellipse cx="119" cy="81" rx="5" ry="9" fill="#171412"/><ellipse cx="99" cy="107" rx="10" ry="6" fill="#171412"/><circle cx="42" cy="45" r="12" fill="#ffb65c" stroke="#171412" stroke-width="3"/><circle cx="29" cy="29" r="7" fill="#ffd391" stroke="#171412" stroke-width="3"/><circle cx="20" cy="16" r="4" fill="#fff"/></svg>'},
+  surprise:{name:"돌발 질문에 영혼 로그아웃형",emoji:"🛸",tag:"예상 밖 질문이 나오면 머릿속이 하얘져요",
+    why:"익숙한 주제에서는 버티지만 낯선 질문이나 상황 변화에서 말의 방향을 잃는 편일 수 있어요. 핵심 브레이크는 모르는 주제에 완벽히 답해야 한다는 압박일 가능성이 큽니다.",
+    explain:"모든 주제를 예측하기보다, 낯선 질문을 익숙한 경험으로 연결하고 시간을 버는 표현을 익히세요.",
+    actions:["모르는 질문에 ‘비슷한 경험’ 하나를 연결해 답하기","잠깐 생각할 때 쓸 시작 문장 3개를 소리 내 연습하기","하루 1개 랜덤 주제를 골라 30초 즉흥 말하기"],
+    criteria:"예상 밖 상황이나 갑작스러운 문제에도 설명을 이어가고, 모르는 표현을 다른 말로 바꾸는 전략을 점검해요.",
+    videoTitle:"오픽 롤플레이 — 상황 설명과 요청을 자연스럽게 말하기",videoUrl:"https://www.youtube.com/watch?v=NTRC8xnc1Gk",videoNote:"제인서의 이지오픽 롤플레이 예시입니다. 상황 변화에 대응하는 표현을 참고하세요.",
+    art:'<svg viewBox="0 0 190 190" aria-hidden="true"><path d="M43 50 39 23q-1-12 8-8l21 26M122 40l17-25q8-8 11 4l3 31" fill="#fff" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M35 91C32 62 51 43 82 43c13-14 44-11 58 7 21 26 15 68-4 91-15 19-53 20-78 9-25-11-28-35-23-59Z" fill="#fff"/><ellipse cx="77" cy="83" rx="5" ry="9" fill="#171412"/><ellipse cx="119" cy="83" rx="5" ry="9" fill="#171412"/><path d="M91 109q9-9 18 0" fill="none" stroke="#171412" stroke-width="4" stroke-linecap="round"/><ellipse cx="142" cy="27" rx="24" ry="8" fill="#b8ebf4" stroke="#fff" stroke-width="3"/><path d="M135 24h14l-5 8h-5Z" fill="#f47b35"/><circle cx="142" cy="13" r="4" fill="#fff"/><path d="m133 36-7 12m28-12 7 12" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>'},
+  monitor:{name:"문법 감시관이 마이크 독점형",emoji:"🚨",tag:"말하는 나보다 채점하는 내가 더 바빠요",
+    why:"말하는 도중 문법·발음·단어 선택을 계속 검열하면 문장 사이가 길어지고 흐름이 끊길 수 있어요. 핵심 브레이크는 실수 하나가 전체 평가를 망칠 거라는 두려움일 수 있습니다.",
+    explain:"정확성을 포기하는 게 아니라, 말하는 시간과 고쳐보는 시간을 분리해 유창한 흐름을 먼저 만드는 연습이 좋아요.",
+    actions:["첫 녹음은 멈춤·수정 없이 끝까지 말하기","두 번째 재생에서 반복되는 오류 한 가지만 고치기","막히면 쉬운 단어로 바꾸어 문장을 계속 이어가기"],
+    criteria:"고급 표현보다 기본 문법의 안정성, 알아듣기 쉬운 전달, 말이 막힐 때 바꿔 말하며 소통을 유지하는지를 살펴봐요.",
+    videoTitle:"오픽 IH/AL 실제 답변 — 자연스러운 말하기와 전달 흐름 듣기",videoUrl:"https://www.youtube.com/watch?v=kfI2wOKhfvI",videoNote:"답변을 들을 때 완벽한 문법만 찾기보다 내용 전달과 연결 방식을 관찰해보세요.",
+    art:'<svg viewBox="0 0 190 190" aria-hidden="true"><path d="M43 50 39 23q-1-12 8-8l21 26M122 40l17-25q8-8 11 4l3 31" fill="#fff" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M35 91C32 62 51 43 82 43c13-14 44-11 58 7 21 26 15 68-4 91-15 19-53 20-78 9-25-11-28-35-23-59Z" fill="#fff"/><ellipse cx="77" cy="83" rx="5" ry="9" fill="#171412"/><ellipse cx="119" cy="83" rx="5" ry="9" fill="#171412"/><path d="M91 108q9-5 18 0" fill="none" stroke="#171412" stroke-width="4" stroke-linecap="round"/><rect x="61" y="72" width="28" height="20" rx="7" fill="none" stroke="#171412" stroke-width="4"/><rect x="105" y="72" width="28" height="20" rx="7" fill="none" stroke="#171412" stroke-width="4"/><path d="M89 80h16m-35 0H61" stroke="#171412" stroke-width="4"/><path d="M155 61v19m-9-10h18" stroke="#ff7956" stroke-width="5" stroke-linecap="round"/></svg>'},
+  pressure:{name:"실전만 가면 얼음 과자형",emoji:"🧊",tag:"연습 때는 괜찮은데 시험 상황에서 굳어요",
+    why:"준비한 답을 알고 있어도 시간 압박이나 녹음 버튼 앞에서 실력이 작아질 수 있어요. 핵심 브레이크는 지식보다 실전 환경에 익숙해지는 연습이 부족한 것일 수 있습니다.",
+    explain:"매일 완벽한 모의고사보다, 짧고 반복 가능한 ‘시험처럼 말하기’로 긴장에 익숙해져 보세요.",
+    actions:["질문을 듣고 준비 10초 뒤 바로 답하는 연습","하루 2문항만 타이머를 켜고 녹음하기","끝난 뒤 점수 추측 대신 답변에서 이어진 문장 수를 기록하기"],
+    criteria:"한 답변만 잘하는 것보다 다양한 질문에 걸쳐 과업을 수행하는 일관성과, 긴장 상황에서도 메시지를 유지하는 습관을 봐요.",
+    videoTitle:"오픽 AL 10일 공부법 — 녹음 연습과 실전 모의고사",videoUrl:"https://www.youtube.com/watch?v=ZZRFuoqSjBw",videoNote:"시험처럼 연습하는 방법을 참고하되, 자신의 배경 설문과 취약 유형에 맞게 적용하세요.",
+    art:'<svg viewBox="0 0 190 190" aria-hidden="true"><path d="M43 50 39 23q-1-12 8-8l21 26M122 40l17-25q8-8 11 4l3 31" fill="#fff" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M35 91C32 62 51 43 82 43c13-14 44-11 58 7 21 26 15 68-4 91-15 19-53 20-78 9-25-11-28-35-23-59Z" fill="#fff"/><ellipse cx="77" cy="83" rx="5" ry="9" fill="#171412"/><ellipse cx="119" cy="83" rx="5" ry="9" fill="#171412"/><path d="M91 108q9 8 18 0" fill="none" stroke="#171412" stroke-width="4" stroke-linecap="round"/><path d="m28 61 10 8-8 13m119-29-8 11 12 8m-101 52 9 8-7 13" fill="none" stroke="#9ddded" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 26h47" stroke="#9ddded" stroke-width="4" stroke-linecap="round"/></svg>'}
+};
+const questions=[
+ {q:"익숙한 경험을 묻는 질문에 답할 때, 나는 보통 어디까지 말할 수 있나요?",hint:"현재·과거 경험을 묘사하거나 이야기할 때 가장 가까운 답을 골라요.",a:[
+  ["script","준비한 주제는 외운 답변대로 말하지만 질문이 바뀌면 흐름이 흔들린다."],
+  ["develop","한두 문장으로 끝나고 구체적인 장면이나 시간 순서를 덧붙이기 어렵다."],
+  ["monitor","이야기는 이어가지만 시제나 문법을 고치느라 문장 사이가 자주 끊긴다."]]},
+ {q:"예상하지 못한 질문이나 상황 변화가 생기면 어떻게 되나요?",hint:"계획에 없던 상황에서도 설명을 이어가는 능력을 떠올려보세요.",a:[
+  ["surprise","무슨 말을 해야 할지 몰라 답변을 짧게 끝내거나 멈춘다."],
+  ["script","외워 둔 답의 주제와 다르면 준비한 표현을 꺼내기 어렵다."],
+  ["pressure","연습에서는 대응하지만 시험처럼 녹음할 때는 머리가 하얘진다."]]},
+ {q:"경험을 설명할 때 답변이 어느 정도로 연결되나요?",hint:"문장 수보다 이야기의 연결과 구체적인 내용에 주목해요.",a:[
+  ["develop","사실은 말하지만 이유·세부 장면·느낌이 빠져 문단으로 이어지지 않는다."],
+  ["script","외운 문장은 매끄럽지만 꼬리 질문이나 표현을 바꿔야 할 때 막힌다."],
+  ["monitor","내용은 떠오르지만 단어와 문법을 고르느라 연결 표현이 잘 안 나온다."]]},
+ {q:"문제가 생긴 상황을 설명하거나 상대에게 요청해야 한다면?",hint:"역할극이나 예상 밖 문제를 다루는 말하기를 생각해보세요.",a:[
+  ["surprise","상황을 설명하고 다음 행동을 제안하는 말이 바로 떠오르지 않는다."],
+  ["monitor","요청은 할 수 있지만 문법이 걱정돼 여러 번 멈추고 다시 시작한다."],
+  ["pressure","표현은 아는데 실제 시험처럼 말하면 충분히 설명하기 어렵다."]]},
+ {q:"말하고 싶은 단어나 표현이 바로 생각나지 않을 때는?",hint:"어려운 단어 대신 쉬운 표현으로 의미를 전달하는 전략도 중요해요.",a:[
+  ["monitor","정확한 단어를 찾느라 침묵하거나 앞 문장으로 되돌아간다."],
+  ["surprise","다른 말로 설명하는 방법이 떠오르지 않아 답을 포기한다."],
+  ["script","준비한 표현이 없으면 그 경험이나 생각 자체를 말하기 어렵다."]]},
+ {q:"내 연습 기록을 돌아보면 가장 큰 빈틈은 무엇인가요?",hint:"OPIc은 전체 답변을 종합적으로 평가하므로 여러 질문에서의 꾸준함도 살펴보세요.",a:[
+  ["develop","답변마다 묘사와 이야기의 깊이가 들쭉날쭉하고 근거·세부사항이 부족하다."],
+  ["pressure","녹음·시간 제한·랜덤 질문을 포함한 실전 연습이 부족하다."],
+  ["script","질문이 달라져도 새로 조합해 말하기보다 외운 답을 재사용한다."]]}
+];
+let current=0;const answers=Array(questions.length).fill(null);
+const hero=document.getElementById("hero"),quiz=document.getElementById("quiz"),result=document.getElementById("result");
+const questionEl=document.getElementById("question"),hintEl=document.getElementById("hint"),optionsEl=document.getElementById("options");
+const nextBtn=document.getElementById("nextBtn"),backBtn=document.getElementById("backBtn");
+function renderQuestion(){
+ const item=questions[current];document.getElementById("qNum").textContent="Q"+(current+1);
+ document.getElementById("progressLabel").textContent="질문 "+(current+1)+" / "+questions.length;
+ const pct=Math.round(((current+1)/questions.length)*100);document.getElementById("progressPercent").textContent=pct+"%";
+ document.getElementById("progressFill").style.width=pct+"%";
+ document.querySelector('[role="progressbar"]').setAttribute("aria-valuenow",pct);
+ questionEl.textContent=item.q;hintEl.textContent=item.hint;optionsEl.replaceChildren();
+ item.a.forEach(([type,label],i)=>{
+   const b=document.createElement("button");b.type="button";b.className="option"+(answers[current]===type?" selected":"");
+   b.setAttribute("aria-pressed",answers[current]===type?"true":"false");
+   const letter=document.createElement("span");letter.className="letter";letter.textContent=String.fromCharCode(65+i);
+   const txt=document.createElement("span");txt.className="option-text";txt.textContent=label;
+   b.append(letter,txt);b.addEventListener("click",()=>{answers[current]=type;renderQuestion()});optionsEl.append(b);
+ });
+ backBtn.disabled=current===0;nextBtn.disabled=!answers[current];nextBtn.textContent=current===questions.length-1?"결과 보기 →":"다음 →";
+}
+function showResult(){
+ const scores=Object.fromEntries(Object.keys(types).map(k=>[k,0]));answers.forEach(k=>scores[k]++);
+ const max=Math.max(...Object.values(scores));let tied=Object.keys(scores).filter(k=>scores[k]===max);
+ // 동점이면 마지막 질문(Q6)의 유형, 그래도 동점이면 첫 질문(Q1)의 유형을 우선합니다.
+ let winner=tied.length===1?tied[0]:(tied.includes(answers[5])?answers[5]:(tied.includes(answers[0])?answers[0]:tied[0]));
+ const t=types[winner];
+ result.innerHTML="";
+ const top=document.createElement("div");top.className="result-hero";
+ const art=document.createElement("div");art.className="creature";art.setAttribute("role","img");art.setAttribute("aria-label",t.name+" 캐릭터");art.innerHTML=t.art;
+ const head=document.createElement("div");head.className="result-head";
+ head.innerHTML='<div class="result-kicker">당신의 AL 브레이크는…</div><h2></h2><p></p>';
+ head.querySelector("h2").textContent=t.emoji+" "+t.name;head.querySelector("p").textContent=t.tag;
+ top.append(art,head);
+ const grid=document.createElement("div");grid.className="result-grid";
+ const why=document.createElement("article");why.className="result-card";why.innerHTML="<h3>🔎 왜 이런 결과가 나왔을까요?</h3><p></p>";why.querySelector("p").textContent=t.why;
+ const expl=document.createElement("article");expl.className="result-card";expl.innerHTML="<h3>🧭 학습 방향</h3><p></p>";expl.querySelector("p").textContent=t.explain;
+ const action=document.createElement("article");action.className="result-card";action.innerHTML="<h3>🛠️ 이렇게 바꿔보기</h3><ul></ul>";t.actions.forEach(s=>{const li=document.createElement("li");li.textContent=s;action.querySelector("ul").append(li)});
+ const criteria=document.createElement("article");criteria.className="result-card criteria";criteria.innerHTML="<h3>🎯 AL을 향해 확인할 말하기 요소</h3><p></p>";criteria.querySelector("p").textContent=t.criteria;
+ const video=document.createElement("article");video.className="result-card video-card";video.innerHTML='<h3>▶ 이 유형에게 추천하는 참고 영상</h3><p class="video-title"></p><p class="video-note"></p><a class="video-link" target="_blank" rel="noopener noreferrer">유튜브에서 영상 보기 ↗</a>';
+ video.querySelector(".video-title").textContent=t.videoTitle;video.querySelector(".video-note").textContent=t.videoNote;video.querySelector(".video-link").href=t.videoUrl;
+ grid.append(why,expl,action,criteria,video);
+ const actions=document.createElement("div");actions.className="result-actions";
+ const note=document.createElement("p");note.className="smallprint";note.innerHTML='이 결과는 공식 OPIc 평가나 점수 예측이 아닌 자기 점검용 학습 힌트예요. 실제 약점은 답변 녹음과 피드백으로 확인해보세요.<br>문항 설계 참고: <a href="https://www.opic.or.kr/opics/servlet/controller.opic.site.about.AboutServlet?p_process=move-introduce-opic" target="_blank" rel="noopener noreferrer">OPIc 공식 평가 소개</a> · <a href="https://www.actfl.org/uploads/files/general/Resources-Publications/ACTFL_Proficiency_Guidelines_2024.pdf" target="_blank" rel="noopener noreferrer">ACTFL 2024 Speaking Guidelines</a>';
+ const restart=document.createElement("button");restart.className="btn btn-main";restart.textContent="다시 진단하기 ↻";restart.addEventListener("click",()=>{answers.fill(null);current=0;result.classList.add("hidden");hero.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})});
+ actions.append(note,restart);result.append(top,grid,actions);
+ quiz.classList.add("hidden");result.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("startBtn").addEventListener("click",()=>{hero.classList.add("hidden");quiz.classList.remove("hidden");current=0;renderQuestion();questionEl.focus?.()});
+nextBtn.addEventListener("click",()=>{if(!answers[current])return;if(current<questions.length-1){current++;renderQuestion()}else showResult()});
+backBtn.addEventListener("click",()=>{if(current>0){current--;renderQuestion()}});
+</script>
+</body>
+</html>
+
